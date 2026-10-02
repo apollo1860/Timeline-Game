@@ -17,13 +17,52 @@ Online spielen über **GitHub Pages**: *Settings → Pages → Branch auswählen
 - Nach 3 Fehlern oder wenn alle Karten gespielt sind, ist das Spiel vorbei. Der Rekord wird im Browser gespeichert.
 - Rundengröße: 10, 20 oder alle Karten.
 
+## Mehrspieler – das Trinkspiel 🍻
+
+`multiplayer.html` (oder oben im Spiel auf **🍻 Mehrspieler** klicken):
+
+1. Name eingeben → **Neuen Raum erstellen**. Code oder Link an die anderen schicken.
+2. Die anderen geben den Code ein (oder öffnen den Link) → **Beitreten**.
+3. Der Host (👑) startet das Spiel.
+4. Reihum legt jeder eine Karte auf **denselben** Zeitstrahl. Es gibt keine Leben:
+   Wer falsch legt, trinkt – abhängig davon, wie viele Karten davor in Folge richtig lagen:
+
+   | richtige in Folge | Schlücke |
+   |-------------------|----------|
+   | 0–3               | 1        |
+   | 4–6               | 2        |
+   | 7–9               | 3        |
+   | 10–11             | 4        |
+   | ab 12             | 5        |
+
+5. Danach startet eine neue Runde mit frischem Zeitstrahl; der Nächste nach dem Verlierer beginnt.
+   Das Schluck-Konto zählt mit. Ist ein Spieler offline, kann er übersprungen werden.
+
+### Firebase einrichten (einmalig, kostenlos)
+
+1. Auf <https://console.firebase.google.com> ein Projekt anlegen (Google Analytics ist nicht nötig).
+2. **Build → Authentication → Get started → Sign-in method → Anonym** aktivieren.
+3. **Build → Realtime Database → Datenbank erstellen** (Standort z. B. `europe-west1`, im *gesperrten Modus* starten).
+   Unter **Regeln** den Inhalt von `database.rules.json` einfügen und veröffentlichen.
+4. **Projekteinstellungen → Allgemein → Meine Apps → Web-App hinzufügen (`</>`)**.
+   Die angezeigte `firebaseConfig` in `firebase-config.js` eintragen (inkl. `databaseURL`).
+5. Committen & pushen – fertig. Die Konfiguration ist nicht geheim; Zugriff haben nur angemeldete Spieler.
+
+Zum lokalen Testen ohne echtes Projekt: Firebase-Emulatoren starten
+(`firebase emulators:start --only database,auth --project demo-timeline`) und
+`multiplayer.html?emulator=1` öffnen.
+
 ## Dateien
 
 | Datei        | Inhalt                                                     |
 |--------------|------------------------------------------------------------|
-| `events.js`  | Liste aller Ereignisse (Titel, Jahr, Bild, kurze Info)      |
-| `img/`       | Ein Bild pro Ereignis (derzeit selbst gezeichnete SVGs)     |
-| `game.js`    | Spiellogik                                                 |
+| `events.js`  | Liste aller Ereignisse (Titel, Jahr, Bild, kurze Info) – gilt für **beide** Modi |
+| `img/`       | Ein Bild pro Ereignis (selbst gezeichnete SVGs)             |
+| `common.js`  | Gemeinsame Bausteine: Karten, Zeitstrahl, Schluck-Regel     |
+| `game.js`    | Einzelspieler-Logik                                        |
+| `multiplayer.html` / `multiplayer.js` | Mehrspieler-Trinkspiel                  |
+| `firebase-config.js` | Firebase-Projektdaten (selbst eintragen)            |
+| `database.rules.json` | Sicherheitsregeln für die Realtime Database        |
 | `style.css`  | Aussehen                                                   |
 
 ## Neue Ereignisse hinzufügen
@@ -34,6 +73,7 @@ In `events.js` einen Eintrag ergänzen:
 { id: "beispiel", title: "Mein Ereignis", year: 1234, approx: false, image: "img/beispiel.webp", fact: "Kurze Info." },
 ```
 
+Neue Ereignisse erscheinen automatisch im Einzel- **und** Mehrspieler-Modus.
 Jahre vor Christus werden negativ angegeben (`-753`); mit `approx: true` erscheint „ca.“ vor dem Jahr.
 
 ## Wie viele Ereignisse – und wie groß dürfen Bilder sein?

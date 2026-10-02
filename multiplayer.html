@@ -1,0 +1,137 @@
+<!doctype html>
+<html lang="de">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Zeitstrahl – Trinkspiel</title>
+  <meta name="description" content="Mehrspieler-Trinkspiel: Ereignisse gemeinsam auf dem Zeitstrahl einordnen.">
+  <link rel="stylesheet" href="style.css">
+</head>
+<body class="mp">
+  <header class="top">
+    <h1>Zeitstrahl <span class="sub">🍻 Trinkspiel</span></h1>
+    <div class="stats" id="roomInfo" hidden>
+      <span>Raum <b id="roomCodeTop"></b></span>
+      <span>Runde <b id="roundNum">1</b></span>
+    </div>
+    <nav class="controls">
+      <a class="navlink" href="index.html">← Einzelspieler</a>
+    </nav>
+  </header>
+
+  <main>
+    <!-- Anmelden / Raum wählen -->
+    <section id="setup" class="panel narrow">
+      <h2>Mitspielen</h2>
+      <p id="configWarning" class="warning" hidden>
+        Firebase ist noch nicht eingerichtet. Trage deine Projektdaten in <code>firebase-config.js</code> ein –
+        die Anleitung steht in der README.
+      </p>
+      <label class="field">Dein Name
+        <input id="nameInput" maxlength="20" autocomplete="nickname" placeholder="z. B. Alex">
+      </label>
+      <button id="createBtn" type="button" class="big">Neuen Raum erstellen</button>
+      <div class="or">oder</div>
+      <div class="join-row">
+        <input id="codeInput" maxlength="4" placeholder="CODE" autocapitalize="characters" aria-label="Raumcode">
+        <button id="joinBtn" type="button">Beitreten</button>
+      </div>
+      <p id="setupMsg" class="msg" aria-live="polite"></p>
+      <details class="rules">
+        <summary>Spielregeln</summary>
+        <ul>
+          <li>Alle legen reihum Karten auf <b>denselben</b> Zeitstrahl.</li>
+          <li>Wer eine Karte falsch legt, trinkt – je länger die Serie davor, desto mehr:</li>
+        </ul>
+        <table class="sip-table">
+          <tr><td>0–3 richtige</td><td>1 Schluck</td></tr>
+          <tr><td>4–6 richtige</td><td>2 Schlücke</td></tr>
+          <tr><td>7–9 richtige</td><td>3 Schlücke</td></tr>
+          <tr><td>10–11 richtige</td><td>4 Schlücke</td></tr>
+          <tr><td>ab 12 richtigen</td><td>5 Schlücke</td></tr>
+        </table>
+        <p>Danach beginnt eine neue Runde mit frischem Zeitstrahl. Bitte verantwortungsvoll trinken – Wasser zählt auch. 💧</p>
+      </details>
+    </section>
+
+    <!-- Lobby -->
+    <section id="lobby" class="panel narrow" hidden>
+      <h2>Raum <span class="code" id="lobbyCode"></span></h2>
+      <p>Schick deinen Freunden den Code oder diesen Link:</p>
+      <div class="join-row">
+        <input id="shareLink" readonly aria-label="Einladungslink">
+        <button id="copyBtn" type="button">Kopieren</button>
+      </div>
+      <h3>Spieler</h3>
+      <ul id="lobbyPlayers" class="player-list"></ul>
+      <button id="startBtn" type="button" class="big" hidden>Spiel starten</button>
+      <p id="lobbyWait" class="msg">Warte, bis der Host das Spiel startet …</p>
+    </section>
+
+    <!-- Spiel -->
+    <section id="game" hidden>
+      <div class="mp-top">
+        <div class="meter" id="meter">
+          <svg class="mug" viewBox="0 0 100 120" aria-hidden="true">
+            <defs><clipPath id="mugClip"><rect x="12" y="14" width="60" height="94" rx="8"/></clipPath></defs>
+            <g clip-path="url(#mugClip)">
+              <g id="beer" class="beer">
+                <rect x="0" y="14" width="100" height="120" fill="#f2a900"/>
+                <rect x="0" y="14" width="100" height="120" fill="url(#beerShade)" opacity=".25"/>
+                <path d="M0 16q8-8 16 0t16 0 16 0 16 0 16 0 16 0v-12H0z" fill="#fff8e1"/>
+                <circle class="bubble b1" cx="26" cy="100" r="2.5" fill="#ffe082"/>
+                <circle class="bubble b2" cx="44" cy="104" r="2" fill="#ffe082"/>
+                <circle class="bubble b3" cx="58" cy="98" r="3" fill="#ffe082"/>
+              </g>
+            </g>
+            <defs><linearGradient id="beerShade" x1="0" x2="1"><stop offset="0" stop-color="#fff"/><stop offset="1" stop-color="#7a4a00"/></linearGradient></defs>
+            <rect x="12" y="14" width="60" height="94" rx="8" fill="none" stroke="#fff6e5" stroke-width="5"/>
+            <path d="M72 36h10q12 0 12 14v20q0 14-12 14H72" fill="none" stroke="#fff6e5" stroke-width="7"/>
+          </svg>
+          <div class="meter-info">
+            <div class="streak"><span id="streakNum" class="num">0</span><span class="lbl">richtig in Folge</span></div>
+            <div class="stake">Ein Fehler kostet jetzt <b id="stakeText">1 Schluck</b></div>
+            <div class="tiers" id="tiers"></div>
+            <div class="next" id="nextTier"></div>
+          </div>
+          <div class="float-msg" id="floatMsg"></div>
+        </div>
+
+        <div class="turn-box">
+          <div id="turnBanner" class="turn-banner"></div>
+          <div id="current" class="current-slot"></div>
+          <p id="mpHint" class="hint"></p>
+          <button id="skipBtn" type="button" class="small" hidden>Spieler ist offline – überspringen</button>
+        </div>
+
+        <aside class="scoreboard">
+          <h3>Schluck-Konto 🍺</h3>
+          <ul id="scoreList" class="player-list"></ul>
+        </aside>
+      </div>
+
+      <p id="feedback" class="feedback" aria-live="polite"></p>
+
+      <section class="timeline-wrap">
+        <div class="axis-label"><span>← früher</span><span>später →</span></div>
+        <div id="timeline" class="timeline"></div>
+      </section>
+    </section>
+  </main>
+
+  <!-- Trinken! -->
+  <div id="drinkOverlay" class="drink-overlay" hidden>
+    <div class="drink-card">
+      <div class="drink-who" id="drinkWho"></div>
+      <div class="drink-sips" id="drinkSips"></div>
+      <div class="drink-mugs" id="drinkMugs"></div>
+      <p class="drink-detail" id="drinkDetail"></p>
+      <button id="nextRoundBtn" type="button" class="big">Nächste Runde</button>
+    </div>
+  </div>
+
+  <script src="events.js"></script>
+  <script src="common.js"></script>
+  <script type="module" src="multiplayer.js"></script>
+</body>
+</html>
