@@ -1,0 +1,92 @@
+:root {
+  --bg: #f4efe6;
+  --panel: #fffaf2;
+  --ink: #2b2620;
+  --muted: #7a6f60;
+  --accent: #b5651d;
+  --ok: #2e8b57;
+  --bad: #c0392b;
+  --card-w: 150px;
+}
+* { box-sizing: border-box; }
+body {
+  margin: 0;
+  font-family: system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+  background: var(--bg);
+  color: var(--ink);
+}
+.top {
+  display: flex; flex-wrap: wrap; align-items: center; gap: 12px 24px;
+  padding: 12px 16px; background: #3b2f25; color: #fff;
+}
+.top h1 { margin: 0; font-size: 1.4rem; letter-spacing: .5px; }
+.stats { display: flex; gap: 16px; font-size: 1.05rem; }
+.controls { margin-left: auto; display: flex; gap: 10px; align-items: center; }
+select, button {
+  font: inherit; padding: 6px 12px; border-radius: 8px; border: none; cursor: pointer;
+}
+button { background: var(--accent); color: #fff; font-weight: 600; }
+button:hover { filter: brightness(1.1); }
+
+main { padding: 16px; }
+.draw { display: flex; flex-direction: column; align-items: center; gap: 8px; }
+.current-slot { min-height: 170px; display: flex; align-items: center; }
+.hint { margin: 0; color: var(--muted); text-align: center; font-size: .95rem; }
+.plus { color: var(--accent); font-weight: bold; }
+.feedback { min-height: 2.6em; margin: 4px 0 0; text-align: center; max-width: 640px; font-weight: 500; }
+.feedback.ok { color: var(--ok); }
+.feedback.bad { color: var(--bad); }
+
+/* Karte */
+.card {
+  width: var(--card-w); flex: 0 0 var(--card-w);
+  background: var(--panel); border-radius: 12px; overflow: hidden;
+  box-shadow: 0 2px 6px rgba(0,0,0,.18);
+  display: flex; flex-direction: column;
+  border: 3px solid transparent;
+  user-select: none;
+}
+.card img { width: 100%; aspect-ratio: 16 / 10; object-fit: cover; display: block; background: #ddd; pointer-events: none; }
+.card .title { padding: 6px 8px; font-size: .85rem; font-weight: 600; line-height: 1.2; min-height: 3.6em; display: flex; align-items: center; justify-content: center; text-align: center; }
+.card .year { background: #3b2f25; color: #fff; text-align: center; font-weight: 700; padding: 3px 0; font-size: .95rem; }
+.card.ok { border-color: var(--ok); }
+.card.bad { border-color: var(--bad); }
+.card.bad .year { background: var(--bad); }
+.card.ok .year { background: var(--ok); }
+.card.new { animation: pop .5s ease; }
+@keyframes pop { 0% { transform: scale(.7); opacity: 0; } 100% { transform: scale(1); opacity: 1; } }
+
+.current-slot .card { --card-w: 190px; cursor: grab; transform: rotate(-1.5deg); box-shadow: 0 6px 18px rgba(0,0,0,.25); }
+.current-slot .card .title { font-size: 1rem; }
+.current-slot .card:active { cursor: grabbing; }
+.current-slot .card .year { background: var(--accent); }
+
+/* Zeitstrahl */
+.timeline-wrap { margin-top: 12px; }
+.axis-label { display: flex; justify-content: space-between; color: var(--muted); font-size: .85rem; padding: 0 4px 4px; }
+.timeline {
+  display: flex; align-items: stretch; gap: 0;
+  overflow-x: auto; padding: 16px 8px 20px;
+  background: linear-gradient(to bottom, transparent calc(50% - 2px), #c9b89c calc(50% - 2px), #c9b89c calc(50% + 2px), transparent calc(50% + 2px));
+  border-radius: 12px; scroll-behavior: smooth;
+}
+.gap {
+  flex: 0 0 36px; align-self: center; height: 120px; margin: 0 4px;
+  border: 2px dashed #c9b89c; border-radius: 10px; background: rgba(255,255,255,.4);
+  color: var(--accent); font-size: 1.6rem; font-weight: 700; padding: 0;
+  transition: flex-basis .15s, background .15s;
+}
+.gap:hover, .gap.over { flex-basis: 80px; background: #fde9cf; border-color: var(--accent); filter: none; }
+.dragging .gap { flex-basis: 56px; }
+.gap:disabled { visibility: hidden; flex-basis: 12px; }
+
+dialog { border: none; border-radius: 16px; padding: 24px 28px; text-align: center; max-width: 360px; box-shadow: 0 10px 40px rgba(0,0,0,.35); }
+dialog::backdrop { background: rgba(0,0,0,.45); }
+dialog h2 { margin-top: 0; }
+
+@media (max-width: 600px) {
+  :root { --card-w: 120px; }
+  .current-slot .card { --card-w: 160px; }
+  .card .title { font-size: .75rem; }
+  .controls { margin-left: 0; }
+}

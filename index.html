@@ -1,0 +1,53 @@
+<!doctype html>
+<html lang="de">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Zeitstrahl – Das Geschichtsspiel</title>
+  <meta name="description" content="Ordne Ereignisse der Menschheitsgeschichte richtig auf dem Zeitstrahl ein.">
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <header class="top">
+    <h1>Zeitstrahl</h1>
+    <div class="stats">
+      <span title="Punkte">⭐ <b id="score">0</b></span>
+      <span title="Leben" id="lives"></span>
+      <span title="Verbleibende Karten">🃏 <b id="left">0</b></span>
+      <span title="Rekord">🏆 <b id="best">0</b></span>
+    </div>
+    <div class="controls">
+      <label>Karten:
+        <select id="roundSize">
+          <option value="10">10</option>
+          <option value="20" selected>20</option>
+          <option value="0">alle</option>
+        </select>
+      </label>
+      <button id="newGame" type="button">Neues Spiel</button>
+    </div>
+  </header>
+
+  <main>
+    <section class="draw">
+      <div id="current" class="current-slot"></div>
+      <p class="hint">Ziehe die Karte an die richtige Stelle im Zeitstrahl – oder tippe auf eine der <span class="plus">＋</span>-Lücken.</p>
+      <p id="feedback" class="feedback" aria-live="polite"></p>
+    </section>
+
+    <section class="timeline-wrap">
+      <div class="axis-label"><span>← früher</span><span>später →</span></div>
+      <div id="timeline" class="timeline"></div>
+    </section>
+  </main>
+
+  <dialog id="gameOver">
+    <h2 id="goTitle">Spiel vorbei</h2>
+    <p id="goText"></p>
+    <button id="again" type="button">Nochmal spielen</button>
+  </dialog>
+
+  <script src="events.js"></script>
+  <script src="game.js"></script>
+</body>
+</html>
