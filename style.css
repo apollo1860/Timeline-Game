@@ -196,9 +196,15 @@ button.small { font-size: .85rem; padding: 4px 10px; background: #7a6f60; }
 @keyframes drop { from { opacity: 0; transform: translateY(-60px) rotate(-30deg) scale(.4); } }
 .drink-detail { color: var(--muted); }
 
+/* Handy/Tablet: Karte → Zeitstrahl direkt darunter → Info → Schluck-o-Meter → Schluck-Konto */
 @media (max-width: 900px) {
-  .mp-top { grid-template-columns: 1fr; }
-  .turn-box { order: -1; }
+  #game { display: flex; flex-direction: column; gap: 12px; }
+  .mp-top { display: contents; }
+  .turn-box { order: 1; }
+  #game .timeline-wrap { order: 2; margin-top: 0; }
+  #game .feedback { order: 3; margin: 0 auto; }
+  .meter { order: 4; }
+  .scoreboard { order: 5; }
 }
 @media (max-width: 600px) {
   .mug { width: 70px; flex-basis: 70px; }
