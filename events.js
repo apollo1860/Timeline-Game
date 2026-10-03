@@ -62,7 +62,7 @@ const EVENTS = [
   { id: "reichstagsbrand", title: "Reichstagsbrand in Berlin", year: 1933, image: "img/reichstagsbrand.svg", fact: "Die Nationalsozialisten nutzten den Brand, um wichtige Grundrechte abzuschaffen." },
   { id: "spanischer_bk", title: "Ausbruch des Spanischen Bürgerkriegs", year: 1936, image: "img/spanischer_bk.svg", fact: "General Franco putschte gegen die Republik; nach drei Jahren Krieg errichtete er eine Diktatur." },
   { id: "hindenburg", title: "Absturz des Luftschiffs „Hindenburg“", year: 1937, image: "img/hindenburg.svg", fact: "Das Unglück in Lakehurst (USA) beendete das Zeitalter der großen Passagier-Luftschiffe." },
-  { id: "vw", title: "Gründung von Volkswagen", year: 1937, image: "img/vw.svg", fact: "Das Unternehmen sollte ein günstiges „Auto für das Volk“ bauen – daraus wurde der VW Käfer." },
+  { id: "vw_gruendung", title: "Gründung von Volkswagen", year: 1937, image: "img/vw_gruendung.svg", fact: "Das Unternehmen sollte ein günstiges „Auto für das Volk“ bauen – daraus wurde der VW Käfer." },
   { id: "kernspaltung", title: "Entdeckung der Kernspaltung", year: 1938, image: "img/kernspaltung.svg", fact: "Otto Hahn und Fritz Straßmann spalteten Uran; Lise Meitner lieferte die Erklärung." },
   { id: "superman", title: "Das erste Superman-Comic erscheint", year: 1938, image: "img/superman.svg", fact: "Superman hatte seinen ersten Auftritt in „Action Comics #1“ – der Beginn des Superhelden-Booms." },
   { id: "wk2", title: "Beginn des Zweiten Weltkriegs", year: 1939, image: "img/wk2.svg", fact: "Am 1. September überfiel Deutschland Polen." },
