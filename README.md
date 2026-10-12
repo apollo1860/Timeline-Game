@@ -9,6 +9,16 @@ bis die Karte gelegt wurde.
 `index.html` im Browser öffnen – fertig. Es gibt keinen Build-Schritt und keine Abhängigkeiten.
 Online spielen über **GitHub Pages**: *Settings → Pages → Branch auswählen → Save*.
 
+## Offline auf dem Handy
+
+```bash
+python3 tools/build_offline.py
+```
+
+erzeugt `zeitstrahl-offline.html` – eine einzige Datei mit allen Karten und Bildern (ca. 0,7 MB).
+Aufs Handy kopieren und im Browser öffnen; der Einzelspieler läuft dann ohne Internet.
+Nach neuen Ereignissen das Skript einfach erneut ausführen.
+
 ## Regeln
 
 - Am Anfang liegt eine Karte mit Jahreszahl auf dem Zeitstrahl.
