@@ -26,7 +26,7 @@ Neue Ereignisse werden beim nächsten Öffnen mit Internet automatisch nachgelad
 python3 tools/build_offline.py
 ```
 
-erzeugt `zeitstrahl-offline.html` – eine einzige Datei mit allen Karten und Bildern (ca. 0,7 MB).
+erzeugt `zeitstrahl-offline.html` – eine einzige Datei mit allen Karten und Bildern (ca. 1,5 MB).
 Aufs Handy kopieren und im Browser öffnen; der Einzelspieler läuft dann ohne Internet.
 Nach neuen Ereignissen das Skript einfach erneut ausführen.
 
