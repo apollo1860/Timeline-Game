@@ -6,8 +6,15 @@
   <title>Zeitstrahl – Das Geschichtsspiel</title>
   <meta name="description" content="Ordne Ereignisse der Menschheitsgeschichte richtig auf dem Zeitstrahl ein.">
   <link rel="stylesheet" href="style.css">
+  <link rel="manifest" href="manifest.webmanifest">
+  <link rel="icon" href="icon.svg" type="image/svg+xml">
+  <link rel="apple-touch-icon" href="icon-180.png">
+  <meta name="theme-color" content="#3b2f25">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-title" content="Zeitstrahl">
 </head>
 <body>
+  <noscript><p class="noscript">Das Spiel braucht JavaScript. Bitte die Seite in Safari oder Chrome öffnen – nicht in einer Datei-Vorschau.</p></noscript>
   <header class="top">
     <h1>Zeitstrahl</h1>
     <div class="stats">
@@ -51,5 +58,14 @@
   <script src="events.js"></script>
   <script src="common.js"></script>
   <script src="game.js"></script>
+  <script>
+    // Offline-Unterstützung (App-Modus): Spiel und Bilder im Browser speichern
+    if ("serviceWorker" in navigator && location.protocol.startsWith("http")) {
+      navigator.serviceWorker.register("sw.js")
+        .then(() => navigator.serviceWorker.ready)
+        .then((reg) => reg.active && reg.active.postMessage("precache"))
+        .catch(() => {});
+    }
+  </script>
 </body>
 </html>

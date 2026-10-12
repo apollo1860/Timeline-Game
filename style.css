@@ -211,3 +211,5 @@ button.small { font-size: .85rem; padding: 4px 10px; background: #7a6f60; }
   .streak .num { font-size: 2.4rem; }
   .drink-sips { font-size: 2rem; }
 }
+
+.noscript { margin: 16px; padding: 14px 16px; background: #fff3cd; border: 1px solid #f2a900; border-radius: 10px; font-weight: 600; }

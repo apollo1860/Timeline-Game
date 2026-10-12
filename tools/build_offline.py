@@ -27,6 +27,8 @@ html = html.replace('<link rel="stylesheet" href="style.css">', f"<style>\n{css}
 # Mehrspieler braucht Internet – Link in der Offline-Version entfernen
 html = re.sub(r'\s*<a class="navlink accent" href="multiplayer.html">.*?</a>', "", html)
 html = re.sub(r'\s*<script src="(events|common|game)\.js"></script>', "", html)
+# App-/Icon-Verweise würden in der Einzeldatei ins Leere zeigen
+html = re.sub(r'\s*<link rel="(manifest|icon|apple-touch-icon)"[^>]*>', "", html)
 html = html.replace("</body>", "".join(f"<script>\n{s}\n</script>\n" for s in scripts) + "</body>")
 
 out.write_text(html, encoding="utf-8")

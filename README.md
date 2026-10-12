@@ -9,7 +9,18 @@ bis die Karte gelegt wurde.
 `index.html` im Browser öffnen – fertig. Es gibt keinen Build-Schritt und keine Abhängigkeiten.
 Online spielen über **GitHub Pages**: *Settings → Pages → Branch auswählen → Save*.
 
-## Offline auf dem Handy
+## Als App aufs Handy (offline)
+
+Über GitHub Pages lässt sich das Spiel wie eine App installieren und läuft danach ohne Internet:
+
+1. GitHub → **Settings → Pages** → „Deploy from a branch“, Branch wählen, Ordner `/ (root)` → Save.
+2. Nach 1–2 Minuten die Seite `https://<name>.github.io/Timeline-Game/` **in Safari bzw. Chrome** öffnen
+   und kurz warten – dabei werden Spiel und alle Bilder gespeichert (`sw.js`).
+3. **iPhone:** Teilen-Symbol → „Zum Home-Bildschirm“. **Android:** Menü ⋮ → „App installieren“.
+
+Neue Ereignisse werden beim nächsten Öffnen mit Internet automatisch nachgeladen.
+
+## Offline-Datei
 
 ```bash
 python3 tools/build_offline.py
