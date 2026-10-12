@@ -4,7 +4,7 @@
   const el = {
     score: $("score"), lives: $("lives"), left: $("left"), best: $("best"),
     current: $("current"), timeline: $("timeline"), feedback: $("feedback"),
-    roundSize: $("roundSize"), newGame: $("newGame"),
+    newGame: $("newGame"),
     dialog: $("gameOver"), goTitle: $("goTitle"), goText: $("goText"), again: $("again"),
   };
 
@@ -22,10 +22,7 @@
 
   function newGame() {
     el.dialog.open && el.dialog.close();
-    const size = Number(el.roundSize.value);
-    const all = TL.shuffle(EVENTS);
-    const n = size > 0 ? Math.min(size + 1, all.length) : all.length; // +1 Startkarte
-    deck = all.slice(0, n);
+    deck = TL.shuffle(EVENTS);
     timeline = [{ event: deck.shift(), state: "start" }];
     score = 0;
     lives = START_LIVES;
@@ -85,7 +82,7 @@
 
     el.current.replaceChildren();
     if (current && !locked) {
-      const c = TL.cardEl(current);
+      const c = TL.cardEl(current, { flippable: true });
       TL.makeDraggable(c, el.timeline);
       el.current.append(c);
     }
@@ -96,6 +93,5 @@
 
   el.newGame.addEventListener("click", newGame);
   el.again.addEventListener("click", newGame);
-  el.roundSize.addEventListener("change", newGame);
   newGame();
 })();

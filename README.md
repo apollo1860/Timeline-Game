@@ -36,7 +36,7 @@ Nach neuen Ereignissen das Skript einfach erneut ausführen.
 - Ziehe die neue Karte in eine Lücke (oder tippe auf eine **＋**-Lücke, z. B. am Handy).
 - Richtig → +1 Punkt. Falsch → 1 Leben weg, und die Karte wird an der richtigen Stelle (rot) eingefügt.
 - Nach 3 Fehlern oder wenn alle Karten gespielt sind, ist das Spiel vorbei. Der Rekord wird im Browser gespeichert.
-- Rundengröße: 10, 20 oder alle Karten.
+- Vor dem Einordnen kann man auf das Bild tippen: Die Karte dreht sich um und zeigt einen kurzen Hinweis (ohne Jahreszahl).
 
 ## Mehrspieler – das Trinkspiel 🍻
 
@@ -91,11 +91,12 @@ Zum lokalen Testen ohne echtes Projekt: Firebase-Emulatoren starten
 In `events.js` einen Eintrag ergänzen:
 
 ```js
-{ id: "beispiel", title: "Mein Ereignis", year: 1234, approx: false, image: "img/beispiel.webp", fact: "Kurze Info." },
+{ id: "beispiel", title: "Mein Ereignis", year: 1234, approx: false, image: "img/beispiel.webp", fact: "Kurze Info.", hint: "Optional: Hinweis ohne Jahreszahl." },
 ```
 
 Neue Ereignisse erscheinen automatisch im Einzel- **und** Mehrspieler-Modus.
 Jahre vor Christus werden negativ angegeben (`-753`); mit `approx: true` erscheint „ca.“ vor dem Jahr.
+Die Rückseite der Karte zeigt `hint` – fehlt es, wird `fact` verwendet. Steht im `fact` eine Jahreszahl, muss es ein `hint` geben.
 
 ## Wie viele Ereignisse – und wie groß dürfen Bilder sein?
 

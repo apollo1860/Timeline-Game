@@ -373,7 +373,7 @@ function renderTurn() {
   el.current.replaceChildren();
   const ev = byId[room.current];
   if (placing && ev) {
-    const c = TL.cardEl(ev);
+    const c = TL.cardEl(ev, { flippable: true });
     if (myTurn) TL.makeDraggable(c, el.timeline);
     else c.classList.add("waiting");
     el.current.append(c);

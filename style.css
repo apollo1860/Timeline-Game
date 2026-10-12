@@ -50,6 +50,25 @@ main { padding: 16px; }
 .card img { width: 100%; aspect-ratio: 16 / 10; object-fit: cover; display: block; background: #ddd; pointer-events: none; }
 .card .title { padding: 6px 8px; font-size: .85rem; font-weight: 600; line-height: 1.2; min-height: 3.6em; display: flex; align-items: center; justify-content: center; text-align: center; }
 .card .year { background: #3b2f25; color: #fff; text-align: center; font-weight: 700; padding: 3px 0; font-size: .95rem; }
+/* Umdrehbare Karte: Bild vorne, Hinweis hinten */
+.card .face { position: relative; aspect-ratio: 16 / 10; cursor: pointer; perspective: 700px; }
+.card .face > img, .card .face > .back {
+  position: absolute; inset: 0; width: 100%; height: 100%;
+  -webkit-backface-visibility: hidden; backface-visibility: hidden;
+  transition: transform .5s ease;
+}
+.card .face > .back {
+  transform: rotateY(-180deg);
+  background: #3b2f25; color: #fff6e5; font-size: .78rem; line-height: 1.3; font-weight: 500;
+  padding: 6px 9px; display: flex; align-items: center; justify-content: center; text-align: center; overflow: auto;
+}
+.card.flipped .face > img { transform: rotateY(180deg); }
+.card.flipped .face > .back { transform: rotateY(0deg); }
+.flip-badge {
+  position: absolute; right: 5px; bottom: 5px; z-index: 1; pointer-events: none;
+  background: rgba(59,47,37,.85); color: #fff; font-size: .7rem; font-weight: 700; padding: 2px 7px; border-radius: 999px;
+}
+.card.flipped .flip-badge { display: none; }
 .card.ok { border-color: var(--ok); }
 .card.bad { border-color: var(--bad); }
 .card.bad .year { background: var(--bad); }
@@ -87,7 +106,8 @@ dialog h2 { margin-top: 0; }
 
 @media (max-width: 600px) {
   :root { --card-w: 120px; }
-  .current-slot .card { --card-w: 160px; }
+  .current-slot .card { --card-w: 200px; }
+  .card .face > .back { font-size: .74rem; padding: 5px 8px; }
   .card .title { font-size: .75rem; }
   .controls { margin-left: 0; }
 }

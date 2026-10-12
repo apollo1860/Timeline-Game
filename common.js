@@ -41,20 +41,44 @@ const TL = (() => {
     return n === 1 ? "1 Schluck" : `${n} Schlücke`;
   }
 
-  function cardEl(e, { showYear, state } = {}) {
+  // Kurzer Hinweis für die Rückseite – verrät nie die Jahreszahl
+  function hintFor(e) {
+    return e.hint || e.fact || "";
+  }
+
+  function cardEl(e, { showYear, state, flippable } = {}) {
     const c = document.createElement("div");
     c.className = "card" + (state && state !== "start" ? " " + state : "");
     const img = document.createElement("img");
     img.src = e.image;
     img.alt = e.title;
     img.loading = "lazy";
+    let media = img;
+    if (flippable) {
+      // Bild antippen → Karte dreht sich um und zeigt den Hinweis
+      media = document.createElement("div");
+      media.className = "face";
+      media.setAttribute("role", "button");
+      media.setAttribute("tabindex", "0");
+      media.setAttribute("aria-label", "Karte umdrehen und Hinweis anzeigen");
+      const back = document.createElement("div");
+      back.className = "back";
+      back.textContent = hintFor(e);
+      const badge = document.createElement("span");
+      badge.className = "flip-badge";
+      badge.textContent = "↻ Info";
+      media.append(img, back, badge);
+      const flip = (ev) => { ev.preventDefault(); ev.stopPropagation(); c.classList.toggle("flipped"); };
+      media.addEventListener("click", flip);
+      media.addEventListener("keydown", (ev) => { if (ev.key === "Enter" || ev.key === " ") flip(ev); });
+    }
     const t = document.createElement("div");
     t.className = "title";
     t.textContent = e.title;
     const y = document.createElement("div");
     y.className = "year";
     y.textContent = showYear ? formatYear(e) : "?";
-    c.append(img, t, y);
+    c.append(media, t, y);
     return c;
   }
 
@@ -101,5 +125,5 @@ const TL = (() => {
     if (focusEl) focusEl.scrollIntoView({ behavior: "smooth", inline: "center", block: "nearest" });
   }
 
-  return { formatYear, shuffle, isCorrect, correctIndex, SIP_TIERS, sipsFor, sipWord, cardEl, makeDraggable, renderTimeline };
+  return { formatYear, hintFor, shuffle, isCorrect, correctIndex, SIP_TIERS, sipsFor, sipWord, cardEl, makeDraggable, renderTimeline };
 })();
