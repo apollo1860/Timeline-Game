@@ -56,7 +56,7 @@
     // Offline-Unterstützung (App-Modus): Spiel und Bilder im Browser speichern
     if ("serviceWorker" in navigator && location.protocol.startsWith("http")) {
       navigator.serviceWorker.register("sw.js")
-        .then(() => navigator.serviceWorker.ready)
+        .then((reg) => { reg.update(); return navigator.serviceWorker.ready; })
         .then((reg) => reg.active && reg.active.postMessage("precache"))
         .catch(() => {});
     }

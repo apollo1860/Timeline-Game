@@ -21,12 +21,19 @@
   };
 
   // Bereits gezogene Karten werden gespeichert und tauchen erst nach einem Reset wieder auf
+  // (zusätzlich im Speicher, falls der Browser localStorage blockiert, z. B. im privaten Modus)
   const USED_KEY = "timeline-used";
-  const usedIds = () => new Set(storage.get(USED_KEY, []));
+  const memUsed = new Set(storage.get(USED_KEY, []));
+  const usedIds = () => new Set([...memUsed, ...storage.get(USED_KEY, [])]);
+  function setUsed(ids) {
+    memUsed.clear();
+    ids.forEach((id) => memUsed.add(id));
+    storage.set(USED_KEY, [...memUsed]);
+  }
   function markUsed(e) {
     const used = usedIds();
     used.add(e.id);
-    storage.set(USED_KEY, [...used]);
+    setUsed(used);
   }
   function draw() {
     const e = deck.shift() || null;
@@ -40,7 +47,7 @@
     let pool = EVENTS.filter((e) => !used.has(e.id));
     let note = "";
     if (pool.length < 2) {
-      storage.set(USED_KEY, []);
+      setUsed([]);
       pool = EVENTS;
       note = "Alle Karten wurden gespielt – der Stapel ist wieder vollständig.";
     }
@@ -56,7 +63,7 @@
 
   function resetDeck() {
     if (!confirm("Alle " + EVENTS.length + " Karten wieder in den Stapel legen und neu starten?")) return;
-    storage.set(USED_KEY, []);
+    setUsed([]);
     newGame();
     setFeedback("Der Stapel ist wieder vollständig.", "");
   }

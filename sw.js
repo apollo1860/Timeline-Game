@@ -1,5 +1,5 @@
 // Service Worker: speichert das Spiel samt aller Bilder, damit es offline läuft.
-const CACHE = "zeitstrahl-v1";
+const CACHE = "zeitstrahl-v2";
 const CORE = [
   "./", "index.html", "style.css", "events.js", "common.js", "game.js",
   "manifest.webmanifest", "icon.svg", "icon-180.png", "icon-192.png", "icon-512.png",
@@ -33,17 +33,19 @@ self.addEventListener("message", (e) => {
   if (e.data === "precache") e.waitUntil(precacheAll().catch(() => {}));
 });
 
-// Erst aus dem Cache antworten (schnell & offline), im Hintergrund aktualisieren.
+// Spieldateien (HTML, JS, CSS): online immer frisch laden, offline aus dem Cache.
+// Bilder: aus dem Cache (schnell & offline), fehlende werden nachgeladen.
 self.addEventListener("fetch", (e) => {
   const url = new URL(e.request.url);
   if (e.request.method !== "GET" || url.origin !== location.origin) return;
+  const isImage = url.pathname.includes("/img/") || /\.(png|svg)$/.test(url.pathname);
   e.respondWith(
     caches.open(CACHE).then(async (cache) => {
       const cached = await cache.match(e.request, { ignoreSearch: true });
-      const fresh = fetch(e.request)
-        .then((res) => { if (res.ok) cache.put(e.request, res.clone()); return res; })
-        .catch(() => cached);
-      return cached || fresh;
+      const fresh = fetch(isImage ? e.request : new Request(url.href, { cache: "no-cache" }))
+        .then((res) => { if (res.ok) cache.put(e.request, res.clone()); return res; });
+      if (isImage) return cached || fresh;
+      return fresh.catch(() => cached);
     })
   );
 });
