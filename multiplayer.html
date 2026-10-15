@@ -13,6 +13,7 @@
     <div class="stats" id="roomInfo" hidden>
       <span>Raum <b id="roomCodeTop"></b></span>
       <span>Runde <b id="roundNum">1</b></span>
+      <span title="Noch nicht gespielte Karten">🃏 <b id="deckLeft">0</b></span>
     </div>
     <nav class="controls">
       <a class="navlink" href="index.html">← Einzelspieler</a>
@@ -102,6 +103,7 @@
           <div id="current" class="current-slot"></div>
           <p id="mpHint" class="hint"></p>
           <button id="skipBtn" type="button" class="small" hidden>Spieler ist offline – überspringen</button>
+          <button id="resetDeckBtn" type="button" class="small" hidden title="Alle Karten wieder in den Stapel legen">🔄 Stapel zurücksetzen</button>
         </div>
 
         <aside class="scoreboard">

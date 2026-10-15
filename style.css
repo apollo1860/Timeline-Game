@@ -22,7 +22,8 @@ body {
 }
 .top h1 { margin: 0; font-size: 1.4rem; letter-spacing: .5px; }
 .stats { display: flex; gap: 16px; font-size: 1.05rem; }
-.controls { margin-left: auto; display: flex; gap: 10px; align-items: center; }
+.controls { margin-left: auto; display: flex; flex-wrap: wrap; gap: 8px 10px; align-items: center; }
+.controls button, .controls .navlink { white-space: nowrap; }
 select, button {
   font: inherit; padding: 6px 12px; border-radius: 8px; border: none; cursor: pointer;
 }

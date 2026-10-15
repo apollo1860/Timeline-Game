@@ -37,6 +37,7 @@ Nach neuen Ereignissen das Skript einfach erneut ausführen.
 - Richtig → +1 Punkt. Falsch → 1 Leben weg, und die Karte wird an der richtigen Stelle (rot) eingefügt.
 - Nach 3 Fehlern oder wenn alle Karten gespielt sind, ist das Spiel vorbei. Der Rekord wird im Browser gespeichert.
 - Vor dem Einordnen kann man auf das Bild tippen: Die Karte dreht sich um und zeigt einen kurzen Hinweis (ohne Jahreszahl).
+- Gezogene Karten kommen nicht wieder in den Stapel – auch nicht im nächsten Spiel. Erst „🔄 Stapel zurücksetzen“ (oder ein leerer Stapel) legt alle Karten zurück. Der Stand wird im Browser gespeichert.
 
 ## Mehrspieler – das Trinkspiel 🍻
 
@@ -57,6 +58,7 @@ Nach neuen Ereignissen das Skript einfach erneut ausführen.
    | ab 12             | 5        |
 
 5. Danach startet eine neue Runde mit frischem Zeitstrahl; der Nächste nach dem Verlierer beginnt.
+6. Der Kartenstapel des Raums läuft über alle Runden weiter – gespielte Karten kommen erst wieder, wenn der Stapel leer ist oder der Host „🔄 Stapel zurücksetzen“ drückt.
    Das Schluck-Konto zählt mit. Ist ein Spieler offline, kann er übersprungen werden.
 
 ### Firebase einrichten (einmalig, kostenlos)

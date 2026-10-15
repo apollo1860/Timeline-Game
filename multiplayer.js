@@ -16,6 +16,7 @@ const el = {
   lobbyCode: $("lobbyCode"), shareLink: $("shareLink"), copyBtn: $("copyBtn"),
   lobbyPlayers: $("lobbyPlayers"), startBtn: $("startBtn"), lobbyWait: $("lobbyWait"),
   roomInfo: $("roomInfo"), roomCodeTop: $("roomCodeTop"), roundNum: $("roundNum"),
+  deckLeft: $("deckLeft"), resetDeckBtn: $("resetDeckBtn"),
   meter: $("meter"), beer: $("beer"), streakNum: $("streakNum"), stakeText: $("stakeText"),
   tiers: $("tiers"), nextTier: $("nextTier"), floatMsg: $("floatMsg"),
   turnBanner: $("turnBanner"), current: $("current"), mpHint: $("mpHint"), skipBtn: $("skipBtn"),
@@ -260,6 +261,18 @@ function nextRound() {
   });
 }
 
+// Host legt alle Karten (außer denen auf dem aktuellen Zeitstrahl) zurück in den Stapel
+function resetDeck() {
+  if (!confirm("Alle Karten wieder in den Stapel legen?")) return;
+  mutate((r) => {
+    if (r.host !== uid || r.status !== "playing") return;
+    const inPlay = new Set(r.timeline.map((t) => t.id));
+    if (r.current) inPlay.add(r.current);
+    r.deck = TL.shuffle(ALL_IDS.filter((id) => !inPlay.has(id)));
+    return r;
+  });
+}
+
 function skipTurn() {
   mutate((r) => {
     if (r.phase !== "place" || isOnline(r, r.order[r.turn])) return;
@@ -285,6 +298,8 @@ function render() {
   seenMoves = room.moves;
 
   el.roundNum.textContent = room.round || 1;
+  el.deckLeft.textContent = (room.deck || []).filter((id) => byId[id]).length;
+  el.resetDeckBtn.hidden = room.host !== uid;
   renderMeter(isNewMove);
   renderTurn();
   renderScores();
@@ -451,6 +466,7 @@ async function main() {
   el.startBtn.addEventListener("click", startGame);
   el.nextRoundBtn.addEventListener("click", nextRound);
   el.skipBtn.addEventListener("click", skipTurn);
+  el.resetDeckBtn.addEventListener("click", resetDeck);
   el.copyBtn.addEventListener("click", async () => {
     try { await navigator.clipboard.writeText(el.shareLink.value); el.copyBtn.textContent = "Kopiert ✓"; }
     catch { el.shareLink.select(); }

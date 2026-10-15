@@ -4,7 +4,7 @@
   const el = {
     score: $("score"), lives: $("lives"), left: $("left"), best: $("best"),
     current: $("current"), timeline: $("timeline"), feedback: $("feedback"),
-    newGame: $("newGame"),
+    newGame: $("newGame"), resetDeck: $("resetDeck"),
     dialog: $("gameOver"), goTitle: $("goTitle"), goText: $("goText"), again: $("again"),
   };
 
@@ -20,16 +20,45 @@
     set(key, value) { try { localStorage.setItem(key, JSON.stringify(value)); } catch { /* ignore */ } },
   };
 
+  // Bereits gezogene Karten werden gespeichert und tauchen erst nach einem Reset wieder auf
+  const USED_KEY = "timeline-used";
+  const usedIds = () => new Set(storage.get(USED_KEY, []));
+  function markUsed(e) {
+    const used = usedIds();
+    used.add(e.id);
+    storage.set(USED_KEY, [...used]);
+  }
+  function draw() {
+    const e = deck.shift() || null;
+    if (e) markUsed(e);
+    return e;
+  }
+
   function newGame() {
     el.dialog.open && el.dialog.close();
-    deck = TL.shuffle(EVENTS);
-    timeline = [{ event: deck.shift(), state: "start" }];
+    const used = usedIds();
+    let pool = EVENTS.filter((e) => !used.has(e.id));
+    let note = "";
+    if (pool.length < 2) {
+      storage.set(USED_KEY, []);
+      pool = EVENTS;
+      note = "Alle Karten wurden gespielt – der Stapel ist wieder vollständig.";
+    }
+    deck = TL.shuffle(pool);
+    timeline = [{ event: draw(), state: "start" }];
     score = 0;
     lives = START_LIVES;
     locked = false;
-    setFeedback("", "");
-    current = deck.shift() || null;
+    setFeedback(note, "");
+    current = draw();
     render();
+  }
+
+  function resetDeck() {
+    if (!confirm("Alle " + EVENTS.length + " Karten wieder in den Stapel legen und neu starten?")) return;
+    storage.set(USED_KEY, []);
+    newGame();
+    setFeedback("Der Stapel ist wieder vollständig.", "");
   }
 
   function place(index) {
@@ -50,7 +79,7 @@
     }
     timeline.forEach((t) => (t.fresh = false));
     timeline.splice(insertAt, 0, { event: e, state, fresh: true });
-    current = deck.shift() || null;
+    current = lives > 0 ? draw() : null;
     render();
 
     if (lives <= 0 || !current) endGame();
@@ -65,7 +94,8 @@
     el.best.textContent = Math.max(best, score);
     el.goTitle.textContent = lives > 0 ? "Geschafft! 🎉" : "Keine Leben mehr";
     el.goText.textContent = `Du hast ${score} Karte${score === 1 ? "" : "n"} richtig eingeordnet.` +
-      (isRecord ? " Neuer Rekord! 🏆" : ` Dein Rekord: ${best}.`);
+      (isRecord ? " Neuer Rekord! 🏆" : ` Dein Rekord: ${best}.`) +
+      ` Noch ${deck.length} von ${EVENTS.length} Karten im Stapel.`;
     setTimeout(() => el.dialog.showModal(), 900);
   }
 
@@ -92,6 +122,7 @@
   }
 
   el.newGame.addEventListener("click", newGame);
+  el.resetDeck.addEventListener("click", resetDeck);
   el.again.addEventListener("click", newGame);
   newGame();
 })();
